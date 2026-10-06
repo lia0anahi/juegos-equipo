@@ -89,6 +89,17 @@
   .chip b { color:var(--ink); }
   .rk .tot { font-family:Georgia,serif; font-size:26px; color:var(--acc); }
 
+  .war-banner { background:var(--acc); color:#fff; border-radius:14px; padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-weight:600; }
+  .war-banner button { background:#fff; color:var(--acc); border:0; border-radius:10px; padding:8px 14px; font-weight:700; }
+  .war-box { border:1px solid var(--line); border-radius:14px; padding:12px; margin-top:12px; background:var(--bg); }
+  .war-box .count { font-family:Georgia,serif; font-size:44px; text-align:center; color:var(--acc); }
+  .picks { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+  .picks button { background:#fff; border:2px solid var(--line); border-radius:14px; padding:14px 4px; font-size:13px; color:var(--ink); display:flex; flex-direction:column; align-items:center; gap:4px; font-weight:600; }
+  .picks button .ic { font-size:28px; }
+  .picks button.on { border-color:var(--acc); background:#fbeeee; }
+  .war-team { margin:8px 0; font-size:14px; line-height:1.5; }
+  .war-table td { padding:5px 8px; border-bottom:1px solid var(--line); font-size:14px; }
+  .war-table td:last-child { text-align:right; font-weight:700; }
   .toast { position:fixed; bottom:84px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:8px 16px; border-radius:10px; z-index:20; font-size:14px; }
 </style>
 </head>
@@ -114,6 +125,7 @@
   <section id="tab-perfil" class="active">
     <h2>Mi perfil</h2>
     <div class="hero-total"><div class="big" id="myTotal">0</div><div class="sub" id="mySub"></div></div>
+    <div id="warBanner" class="war-banner hidden"></div>
     <div class="card">
       <p class="muted" style="margin-top:0">Cargá los puntos que ganaste en cada juego. Se guardan solos.</p>
       <div id="myGames"></div>
@@ -225,7 +237,22 @@
     <p class="muted">Todos suman al menos 2 por participar, y quienes quedaron a una canción de ganar suman 4. El máximo es 8, igual que J1. Si hay empate, nadie recibe los 8. Quienes tuvieran un bingo falso no pierden este puntaje.</p>
         </div>
       </details>
-      <div class="game soon"><div class="gsum"><span class="gcode">J7</span><span class="gname">Próximamente</span></div></div>
+      <details class="game" id="game-6">
+        <summary><span class="gcode">J7</span><span class="gname">Guerra de Equipos</span><span class="chev">›</span></summary>
+        <div class="gbody">
+          <p><b>Objetivo:</b> una guerra individual: los 14 jugadores toman una decisión cada uno, por su cuenta. Cada jugador elige en secreto qué hacer: <b>⚔️ Atacar</b>, <b>🛡️ Defender</b> o <b>💰 Cobrar fijo</b>.</p>
+          <p><b>Tiempo:</b> alguien inicia la guerra y todos tienen <b>5 minutos</b> para elegir (se puede cambiar la elección mientras corre el tiempo). Después se cierra y <b>los puntos se calculan solos</b>: en este juego no se cargan a mano. Si no elegís, te toca Cobrar fijo.</p>
+          <h3>Cómo se calculan los puntos</h3>
+          <table class="pts">
+            <tr><th>Elección</th><th>Puntos</th></tr>
+            <tr><td>💰 Cobrar fijo</td><td>3, menos lo que te roben: cada ataque que no se bloquea roba 4 puntos de la bolsa de los que cobran fijo (la bolsa es 3 por cada uno), repartido en partes iguales</td></tr>
+            <tr><td>🛡️ Defender</td><td>2, más hasta 4 según qué proporción de los defensores logró bloquear un ataque (si nadie ataca, te quedás con 2)</td></tr>
+            <tr><td>⚔️ Atacar</td><td>1, más el botín robado dividido en partes iguales entre todos los atacantes</td></tr>
+          </table>
+          <p class="muted">Cada defensor bloquea 1 ataque (el que sea). Los ataques que pasan sin bloquear son los atacantes menos los defensores. Los puntos se redondean a enteros. Mínimo 0, máximo 6 por jugador. Atacar paga más si hay pocos atacantes y pocas defensas; defender protege a todos; cobrar fijo es lo seguro.</p>
+                    <div id="war"></div>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -252,7 +279,7 @@ const PLAYERS = [
   "Carolina Villa", "Mariana Romero", "Maggie Tobar", "Ignacio Gnarra",
   "Lara Rosenberg", "Andre Rodriguez"
 ];
-const GAME_NAMES = ["Sequence", "Código Secreto", "Sospechosos Inusuales", "That's Not a Hat", "3 en Raya", "Bingo Musical", "Juego 7"];
+const GAME_NAMES = ["Sequence", "Código Secreto", "Sospechosos Inusuales", "That's Not a Hat", "3 en Raya", "Bingo Musical", "Guerra de Equipos"];
 const GAMES = GAME_NAMES.length;
 const MAX_POINTS = 20;
 const KEY = "juegos-puntos-v1"; //LS
@@ -346,12 +373,13 @@ document.getElementById("logout").addEventListener("click", () => {
 });
 
 // ---------- tabs ----------
-document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => {
-  document.querySelectorAll("nav.tabs button").forEach(x => x.classList.toggle("on", x === b));
-  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === "tab-" + b.dataset.tab));
+function showTab(name) {
+  document.querySelectorAll("nav.tabs button").forEach(x => x.classList.toggle("on", x.dataset.tab === name));
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === "tab-" + name));
   window.scrollTo(0, 0);
-  if (b.dataset.tab === "ranking") renderRanking();
-}));
+  if (name === "ranking") renderRanking();
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
 
 // ---------- mi perfil ----------
 function rankOf(p) { const t = total(p); return 1 + PLAYERS.filter((_, q) => total(q) > t).length; }
@@ -368,7 +396,12 @@ function renderProfile() {
   GAME_NAMES.forEach((name, g) => {
     const row = el("div", undefined, "row");
     const txt = el("div", undefined, "gtxt"); txt.append(el("b", `J${g + 1} · ${name}`));
-    if (g === GAMES - 1) txt.append(el("span", "Se habilita cuando se defina el juego"));
+    if (g === WAR_GAME) {
+      const ph = warPhase(), v = scores[me][g];
+      txt.append(el("span", "Se calcula solo"));
+      row.append(txt, el("div", ph === "closed" ? `${v} pts` : ph === "open" ? "En juego ⚔️" : "Sin empezar", "muted"));
+      box.append(row); return;
+    }
     const inp = document.createElement("input");
     inp.type = "number"; inp.inputMode = "numeric"; inp.min = 0; inp.max = MAX_POINTS; inp.step = 1; inp.placeholder = "–";
     inp.setAttribute("aria-label", `Puntos en ${name}`);
@@ -424,6 +457,146 @@ function renderAll(withProfile) {
   if (withProfile) renderProfile(); else renderProfileHeader();
   renderRanking();
 }
+
+// ---------- J7 · Guerra de Equipos ----------
+const WAR_GAME = 6;
+const WAR_MS = 5 * 60 * 1000;
+const CHOICES = { A: { ic: "⚔️", label: "Atacar" }, D: { ic: "🛡️", label: "Defender" }, F: { ic: "💰", label: "Cobrar fijo" } };
+const war = { start: null, picks: {}, offset: 0 };
+
+const serverNow = () => Date.now() + war.offset;
+function warPhase() {
+  if (war.start === null) return "idle";
+  return serverNow() < war.start + WAR_MS ? "open" : "closed";
+}
+const pickOf = p => war.picks[p] || "F";   // sin elección = Cobrar fijo
+
+// Cálculo determinista: todos los celulares llegan al mismo resultado con los mismos datos.
+function warResults() {
+  const c = { A: 0, D: 0, F: 0 };
+  PLAYERS.forEach((_, p) => c[pickOf(p)]++);
+  const blocked = Math.min(c.A, c.D);            // cada defensor bloquea 1 ataque
+  const U = c.A - blocked;                       // ataques que pasan
+  const stolen = Math.min(4 * U, 3 * c.F);       // botín: 4 por ataque, tope = bolsa de los fijos (3 c/u)
+  const pts = PLAYERS.map((_, p) => {
+    const ch = pickOf(p);
+    let v;
+    if (ch === "F") v = 3 - stolen / c.F;
+    else if (ch === "D") v = 2 + 4 * blocked / c.D;
+    else v = 1 + stolen / c.A;
+    return Math.max(0, Math.round(v));
+  });
+  return { c, blocked, U, stolen, pts };
+}
+
+function applyWar() {
+  const closed = warPhase() === "closed";
+  const res = closed ? warResults() : null;
+  PLAYERS.forEach((_, p) => { scores[p][WAR_GAME] = closed ? res.pts[p] : null; });
+}
+
+async function syncClock() {
+  if (!FB_URL) return;
+  const t0 = Date.now();
+  const r = await fetch(FB_URL + "/g7/now.json", { method: "PUT", body: JSON.stringify({ ".sv": "timestamp" }) });
+  const sv = await r.json();
+  if (typeof sv === "number") war.offset = sv - (t0 + Date.now()) / 2;
+}
+async function loadWar() {
+  if (!FB_URL) return;
+  const r = await fetch(FB_URL + "/g7.json");
+  if (!r.ok) throw new Error("db");
+  const d = (await r.json()) || {};
+  war.start = typeof d.start === "number" ? d.start : null;
+  war.picks = {};
+  const pk = d.pick || {};
+  PLAYERS.forEach((_, i) => { if (["A", "D", "F"].includes(pk[i])) war.picks[i] = pk[i]; });
+}
+async function refresh() {
+  await loadAll();
+  try { await loadWar(); } catch { notify("No se pudo leer la guerra"); }
+  applyWar();
+}
+
+let armed = false, armTimer;
+async function startWar() {
+  if (!armed) {
+    armed = true; renderWar();
+    clearTimeout(armTimer); armTimer = setTimeout(() => { armed = false; renderWar(); }, 4000);
+    return;
+  }
+  armed = false;
+  try {
+    await syncClock();
+    await fetch(FB_URL + "/g7/start.json", { method: "PUT", body: JSON.stringify({ ".sv": "timestamp" }) });
+  } catch { notify("No se pudo iniciar, reintentá"); }
+  await refresh(); renderAll(false); renderWar();
+}
+async function choose(c) {
+  if (warPhase() !== "open") return;
+  war.picks[me] = c; renderWar();
+  try {
+    const r = await fetch(FB_URL + "/g7/pick/" + me + ".json", { method: "PUT", body: JSON.stringify(c) });
+    if (!r.ok) throw new Error("db");
+    notify("✓ Elección guardada");
+  } catch { notify("No se pudo guardar, reintentá"); }
+}
+
+const fmtTime = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+
+function renderWar() {
+  const box = document.getElementById("war"); if (!box) return;
+  box.replaceChildren();
+  const s = el("div", undefined, "war-box"); box.append(s);
+  if (!FB_URL) { s.append(el("p", "La guerra solo funciona en la versión publicada (necesita la base compartida).", "muted")); return; }
+  const ph = warPhase();
+  if (ph === "idle") {
+    s.append(el("p", "La guerra todavía no empezó. Cuando alguien la inicia, todos tienen 5 minutos para elegir."));
+    const b = el("button", armed ? "¿Seguro? Tocá de nuevo para iniciar" : "⚔️ Iniciar la guerra", "btn"); b.type = "button";
+    b.addEventListener("click", startWar); s.append(b);
+  } else if (ph === "open") {
+    s.append(el("div", fmtTime(war.start + WAR_MS - serverNow()), "count"), el("p", "Tu elección (podés cambiarla hasta que termine el tiempo):", "muted"));
+    const row = el("div", undefined, "picks");
+    Object.entries(CHOICES).forEach(([k, c]) => {
+      const b = el("button", undefined, pickOf(me) === k && war.picks[me] ? "on" : ""); b.type = "button";
+      b.append(el("span", c.ic, "ic"), c.label); b.addEventListener("click", () => choose(k)); row.append(b);
+    });
+    s.append(row);
+    if (!war.picks[me]) s.append(el("p", "Todavía no elegiste: si no elegís, te toca 💰 Cobrar fijo.", "muted"));
+    s.append(el("p", `Ya eligieron ${Object.keys(war.picks).length} de ${PLAYERS.length}. Las elecciones se revelan cuando termina el tiempo.`, "muted"));
+  } else {
+    const res = warResults();
+    s.append(el("p", "✅ Guerra terminada", "serif"));
+    s.append(el("div", `⚔️ ${res.c.A} atacaron · 🛡️ ${res.c.D} defendieron · 💰 ${res.c.F} cobraron fijo — ataques bloqueados: ${res.blocked}, ataques que pasaron: ${res.U}`, "war-team"));
+        const tb = el("table", undefined, "war-table"); tb.style.width = "100%";
+    PLAYERS.map((_, i) => i).sort((a, b) => res.pts[b] - res.pts[a] || PLAYERS[a].localeCompare(PLAYERS[b])).forEach(p => {
+      const tr = el("tr");
+      tr.append(el("td", PLAYERS[p] + (p === me ? " (vos)" : "")), el("td", CHOICES[pickOf(p)].ic + (war.picks[p] ? "" : " (sin elegir)")), el("td", res.pts[p] + " pts"));
+      tb.append(tr);
+    });
+    s.append(tb);
+  }
+}
+
+function renderWarBanner() {
+  const b = document.getElementById("warBanner");
+  if (warPhase() !== "open" || me === null) { b.classList.add("hidden"); return; }
+  b.replaceChildren(el("span", `⚔️ ¡Guerra en curso! Quedan ${fmtTime(war.start + WAR_MS - serverNow())}`));
+  const go = el("button", war.picks[me] ? "Ver" : "Elegir"); go.type = "button";
+  go.addEventListener("click", () => { showTab("juegos"); const d = document.getElementById("game-6"); d.open = true; d.scrollIntoView(); });
+  b.append(go); b.classList.remove("hidden");
+}
+
+let lastPhase = null;
+setInterval(() => {
+  const ph = warPhase();
+  renderWarBanner();
+  if (ph === "open") { const c = document.querySelector("#war .count"); if (c) c.textContent = fmtTime(war.start + WAR_MS - serverNow()); }
+  if (lastPhase !== null && ph !== lastPhase) {
+    refresh().then(() => { if (me !== null) renderAll(true); renderWar(); renderWarBanner(); });
+  }
+  lastPhase = ph;
+}, 1000);
 
 // ---------- contenido de los juegos (sorteos) ----------
 // Sorteo aleatorio de Sequence (generado una vez para que todos vean lo mismo)
@@ -554,14 +727,19 @@ renderSuspects();
 
 // ---------- arranque ----------
 renderNames("");
-loadAll().then(() => {
+renderWar();
+syncClock().catch(() => {}).then(refresh).then(() => {
   let saved = null; try { saved = localStorage.getItem(ME_KEY); } catch {} //LS
   if (saved !== null && PLAYERS[Number(saved)]) enter(Number(saved)); //LS
   if (me !== null) renderAll(true);
+  renderWar(); renderWarBanner();
 }).catch(() => notify("No se pudieron cargar los puntos"));
 // Se refresca solo para ver los puntos de los demás (sin pisar lo que estás escribiendo)
 if (GS || FB_URL) setInterval(() => {
-  loadAll().then(() => { if (me !== null) renderAll(!document.activeElement || document.activeElement.tagName !== "INPUT"); }).catch(() => {});
+  refresh().then(() => {
+    if (me !== null) renderAll(!document.activeElement || document.activeElement.tagName !== "INPUT");
+    renderWar(); renderWarBanner();
+  }).catch(() => {});
 }, 15000);
 </script>
 </body>

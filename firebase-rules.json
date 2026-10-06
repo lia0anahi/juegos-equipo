@@ -6,6 +6,23 @@
       "$k": {
         ".validate": "$k.matches(/^s([0-9]|1[0-3])_[0-6]$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 20 && newData.val() % 1 === 0"
       }
+    },
+    "g7": {
+      ".read": true,
+      "now": {
+        ".write": true,
+        ".validate": "newData.isNumber()"
+      },
+      "start": {
+        ".write": "!data.exists()",
+        ".validate": "newData.isNumber() && newData.val() <= now + 5000 && newData.val() >= now - 10000"
+      },
+      "pick": {
+        "$p": {
+          ".write": "root.child('g7/start').exists() && now < root.child('g7/start').val() + 300000",
+          ".validate": "$p.matches(/^([0-9]|1[0-3])$/) && newData.isString() && newData.val().matches(/^[ADF]$/)"
+        }
+      }
     }
   }
 }
