@@ -273,7 +273,7 @@ function fromObj(obj) {
   return out;
 }
 // Base de datos compartida (Firebase Realtime Database) para cuando se publica fuera de Grid.
-const FB_URL = "";
+const FB_URL = "https://copa-dayoff-default-rtdb.firebaseio.com";
 async function loadAll() {
   if (GS) { const { state } = await GS.get(); scores = fromObj(state || {}); }
   else if (FB_URL) {
