@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "scores": {
+      ".read": true,
+      ".write": true,
+      "$k": {
+        ".validate": "$k.matches(/^s([0-9]|1[0-3])_[0-6]$/) && newData.isNumber() && newData.val() >= 0 && newData.val() <= 20 && newData.val() % 1 === 0"
+      }
+    }
+  }
+}

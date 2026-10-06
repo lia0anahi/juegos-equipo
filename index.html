@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Juegos del Equipo</title>
+<style>
+  :root { --bg:#f7f1e5; --card:#fffdf8; --ink:#1f2d4a; --mut:#7a7466; --line:#e6dcc8; --acc:#8b2e3c; --gold:#c9a24a; --ok:#2f7d5b; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+  h1,h2,h3,.serif { font-family:Georgia,"Times New Roman",serif; }
+  .hidden { display:none !important; }
+  button { font:inherit; cursor:pointer; }
+  .btn { background:var(--ink); color:#fff; border:0; border-radius:12px; padding:14px 18px; font-weight:600; width:100%; }
+  .btn.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); width:auto; padding:6px 12px; font-size:13px; }
+
+  /* Login */
+  #login { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
+  .seal { width:96px; height:96px; border-radius:50%; background:var(--ink); color:var(--gold); display:grid; place-items:center; font-size:44px; box-shadow:0 8px 24px rgba(31,45,74,.25); }
+  #login h1 { font-size:38px; letter-spacing:2px; margin:20px 0 4px; font-weight:600; }
+  .date { color:var(--acc); letter-spacing:6px; font-size:13px; font-weight:700; margin-bottom:16px; }
+  .login-card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px; width:100%; max-width:420px; margin-top:12px; box-shadow:0 6px 20px rgba(0,0,0,.06); }
+  .login-card input { width:100%; padding:14px; border:1px solid var(--line); border-radius:12px; font-size:16px; background:#fff; color:var(--ink); }
+  .names { margin:10px 0 0; max-height:260px; overflow:auto; text-align:left; }
+  .names button { display:block; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--line); padding:12px 6px; font-size:16px; color:var(--ink); }
+  .names button:active { background:var(--bg); }
+
+  /* App */
+  #app { max-width:640px; margin:0 auto; padding:0 14px 96px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:16px 2px 8px; }
+  header .who { font-size:13px; color:var(--mut); }
+  header .who b { display:block; font-size:18px; color:var(--ink); font-family:Georgia,serif; }
+  section { display:none; } section.active { display:block; }
+  h2 { font-size:24px; margin:12px 0 10px; font-weight:600; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px; }
+  .muted { color:var(--mut); font-size:13px; }
+
+  nav.tabs { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:1px solid var(--line); display:flex; justify-content:center; padding-bottom:env(safe-area-inset-bottom); z-index:5; }
+  nav.tabs .in { display:flex; width:100%; max-width:640px; }
+  nav.tabs button { flex:1; background:none; border:0; padding:10px 4px 12px; color:var(--mut); font-size:12px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  nav.tabs button .ic { font-size:22px; }
+  nav.tabs button.on { color:var(--acc); font-weight:700; }
+
+  /* Perfil */
+  .hero-total { text-align:center; padding:18px 10px; background:var(--ink); color:#fff; border-radius:16px; margin-bottom:12px; }
+  .hero-total .big { font-family:Georgia,serif; font-size:56px; line-height:1; color:var(--gold); }
+  .hero-total .sub { font-size:14px; opacity:.85; margin-top:6px; }
+  .row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .row:last-child { border-bottom:0; }
+  .row .gtxt { flex:1; min-width:0; }
+  .row .gtxt b { display:block; }
+  .row .gtxt span { font-size:12px; color:var(--mut); }
+  .stepper { display:flex; align-items:center; gap:6px; }
+  .stepper button { width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:#fff; font-size:20px; color:var(--ink); line-height:1; }
+  .stepper input { width:56px; height:36px; text-align:center; border:1px solid var(--line); border-radius:10px; font-size:16px; background:#fff; color:var(--ink); }
+  .saved { color:var(--ok); font-size:12px; height:14px; }
+
+  /* Juegos */
+  details.game, .game.soon { background:var(--card); border:1px solid var(--line); border-radius:16px; margin-bottom:10px; overflow:hidden; }
+  details.game summary, .gsum { list-style:none; display:flex; align-items:center; gap:12px; padding:16px; cursor:pointer; }
+  details.game summary::-webkit-details-marker { display:none; }
+  .gcode { background:var(--ink); color:var(--gold); border-radius:10px; padding:4px 10px; font-weight:700; font-size:14px; }
+  .gname { flex:1; font-family:Georgia,serif; font-size:19px; }
+  .chev { font-size:24px; color:var(--mut); transition:transform .2s; }
+  details[open] .chev { transform:rotate(90deg); }
+  .soon { opacity:.6; }
+  .gbody { padding:0 16px 16px; }
+  .gbody p { margin:8px 0; line-height:1.45; font-size:15px; }
+  .gbody h3 { margin:14px 0 6px; font-size:16px; color:var(--acc); }
+  .hero { float:right; width:130px; height:130px; object-fit:cover; border-radius:12px; margin:0 0 8px 12px; }
+  .gbody::after { content:""; display:block; clear:both; }
+  table { border-collapse:collapse; } .pts th,.pts td { padding:6px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:14px; }
+  .pts th { color:var(--mut); font-weight:600; }
+  .rounds { display:grid; gap:10px; margin-top:12px; }
+  .round { border:1px solid var(--line); border-radius:12px; padding:10px; background:var(--bg); }
+  .round h4 { margin:0 0 6px; color:var(--acc); font-family:Georgia,serif; }
+  .board { margin:6px 0; font-size:14px; line-height:1.4; } .board b { display:block; color:var(--mut); font-size:12px; }
+
+  /* Ranking */
+  .winner { background:linear-gradient(90deg,#a8741a,#e2c26b); color:#1b1405; border-radius:16px; padding:16px; font-weight:700; text-align:center; margin-bottom:12px; font-family:Georgia,serif; font-size:19px; }
+  .rk { display:flex; align-items:center; gap:10px; padding:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:8px; }
+  .rk.me { border-color:var(--acc); box-shadow:0 0 0 2px rgba(139,46,60,.15); }
+  .rk .pos { width:34px; text-align:center; font-family:Georgia,serif; font-size:20px; color:var(--mut); }
+  .rk.top .pos { font-size:26px; }
+  .rk .info { flex:1; min-width:0; }
+  .rk .nm { font-weight:600; }
+  .rk .chips { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+  .chip { font-size:11px; background:var(--bg); border-radius:6px; padding:2px 6px; color:var(--mut); }
+  .chip b { color:var(--ink); }
+  .rk .tot { font-family:Georgia,serif; font-size:26px; color:var(--acc); }
+
+  .toast { position:fixed; bottom:84px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:8px 16px; border-radius:10px; z-index:20; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="seal">🏆</div>
+  <h1>JUEGOS DEL EQUIPO</h1>
+  <div class="date">7 JUEGOS · 14 JUGADORES</div>
+  <p class="muted">✨ Buscá tu nombre e ingresá para cargar tus puntos.</p>
+  <div class="login-card">
+    <input id="search" type="text" placeholder="Buscá tu nombre" autocomplete="off">
+    <div class="names" id="names"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="who">Jugando como<b id="whoName"></b></div>
+    <button class="btn ghost" id="logout">Cambiar</button>
+  </header>
+
+  <section id="tab-perfil" class="active">
+    <h2>Mi perfil</h2>
+    <div class="hero-total"><div class="big" id="myTotal">0</div><div class="sub" id="mySub"></div></div>
+    <div class="card">
+      <p class="muted" style="margin-top:0">Cargá los puntos que ganaste en cada juego. Se guardan solos.</p>
+      <div id="myGames"></div>
+    </div>
+  </section>
+
+  <section id="tab-juegos">
+    <h2>Juegos</h2>
+    <div id="gamesList">
+      <details class="game" id="game-0">
+        <summary><span class="gcode">J1</span><span class="gname">Sequence</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="sequence.webp" alt="Sequence: tablero de cartas con fichas azules, rojas y verdes">
+    <p><b>Objetivo:</b> formar una secuencia de 5 fichas seguidas (horizontal, vertical o diagonal) sobre el tablero, jugando cartas de la mano.</p>
+    <p><b>Formato:</b> 14 personas, 3 tableros, <b>7 parejas</b> y <b>2 rondas</b>. Tablero A: 3 equipos de 2 (6 personas). Tableros B y C: 2 equipos de 2 (4 personas cada uno). Las parejas y los tableros cambian en la ronda 2, y nadie repite pareja ni juega dos veces en el tablero A.</p>
+    <p><b>Gana:</b> en el tablero A (3 equipos), la primera pareja que arma <b>1 secuencia</b>; en B y C (2 equipos), la primera que arma <b>2 secuencias</b>. El 2.º y 3.º puesto del tablero A se definen por quién tenga más fichas en su mejor línea (o una mano extra si se juega hasta el final).</p>
+    <h3>Puntos por ronda (cada integrante de la pareja suma lo mismo)</h3>
+    <table class="pts">
+      <tr><th>Tablero</th><th>1.º</th><th>2.º</th><th>3.º</th></tr>
+      <tr><td>A (3 equipos)</td><td>4</td><td>2</td><td>1</td></tr>
+      <tr><td>B y C (2 equipos)</td><td>3</td><td>1</td><td>—</td></tr>
+    </table>
+    <p class="muted">Total del juego 1 = ronda 1 + ronda 2 (máximo 8). Desempate: más victorias; si persiste, una mano extra.</p>
+    <div id="rounds"></div>
+        </div>
+      </details>
+      <details class="game" id="game-1">
+        <summary><span class="gcode">J2</span><span class="gname">Código Secreto</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="codigo-secreto.png" alt="Código Secreto: tablero de 25 cartas con agentes y palabras">
+    <p><b>Objetivo:</b> cada equipo tiene un <b>jefe de espías</b> que da pistas de una sola palabra y un número para que su equipo adivine las palabras de su color. Gana el primer equipo que descubre a todos sus agentes. Si tocan al asesino, pierden al instante.</p>
+    <p><b>Formato:</b> 2 equipos de 7 (Rojo y Azul), sorteados al azar. Los equipos <b>se mantienen las 3 rondas</b>. En cada ronda cambia el jefe de espías (uno distinto por ronda en cada equipo); el resto adivina.</p>
+    <h3>Puntos por ronda (todo el equipo de 7 suma lo mismo)</h3>
+    <table class="pts">
+      <tr><th>Resultado</th><th>Puntos</th></tr>
+      <tr><td>Ronda ganada</td><td>3</td></tr>
+      <tr><td>Ronda perdida</td><td>1</td></tr>
+    </table>
+    <p class="muted">Total del juego 2 = suma de las 3 rondas (entre 3 y 9). Si hay 1-2 o 2-1 en rondas, el equipo con más rondas ganadas es el ganador del juego.</p>
+    <div id="teams"></div>
+        </div>
+      </details>
+      <details class="game" id="game-2">
+        <summary><span class="gcode">J3</span><span class="gname">Sospechosos Inusuales</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="sospechosos-inusuales.png" alt="Sospechosos Inusuales: cartas de sospechosos, tablero numerado y cartas de pregunta">
+    <p><b>Objetivo:</b> descubrir cuál de los sospechosos es el culpable haciendo preguntas con las cartas y descartando a los que no coinciden con las respuestas.</p>
+    <p><b>Formato:</b> 2 equipos de 7 y <b>4 rondas</b>. Los equipos se <b>sortean al azar en cada ronda</b>, así todos juegan con y contra gente distinta y nadie queda atado a un solo equipo. Gana la ronda el equipo que identifica primero al culpable.</p>
+    <h3>Puntos por ronda (todo el equipo de 7 suma lo mismo)</h3>
+    <table class="pts">
+      <tr><th>Resultado</th><th>Puntos</th></tr>
+      <tr><td>Ronda ganada</td><td>2</td></tr>
+      <tr><td>Ronda perdida</td><td>1</td></tr>
+    </table>
+    <p class="muted">Total del juego 3 = suma de las 4 rondas (entre 4 y 8). Como los equipos cambian cada ronda, el total es individual: quien ganó más rondas suma más. Empate: queda así.</p>
+    <div id="suspects"></div>
+        </div>
+      </details>
+      <details class="game" id="game-3">
+        <summary><span class="gcode">J4</span><span class="gname">That's Not a Hat</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="thats-not-a-hat.jpg" alt="That's Not a Hat: caja rosa y cartas con objetos dibujados">
+    <p><b>Objetivo:</b> es un juego de memoria y engaño. Se pasan cartas boca abajo diciendo qué objeto creen que son; quien recibe decide si le cree o no, y quien se equivoca se lleva la carta. Gana quien evite acumular cartas hasta el final.</p>
+    <p><b>Formato:</b> tenemos 2 copias, así que hay <b>2 mesas de 7</b> jugando a la vez, cada persona por su cuenta. Los grupos se sortearon al azar y <b>se mantienen las 3 rondas</b>: los mismos 7 juegan juntos en cada ronda.</p>
+    <h3>Puntos por ronda (según el puesto en tu mesa)</h3>
+    <table class="pts">
+      <tr><th>Puesto</th><th>1.º</th><th>2.º</th><th>3.º al 7.º</th></tr>
+      <tr><td>Puntos</td><td>3</td><td>2</td><td>1</td></tr>
+    </table>
+    <p class="muted">Total del juego 4 = suma de las 3 rondas (entre 3 y 9). Si dos personas empatan en el puesto, comparten los puntos más altos de esos lugares.</p>
+    <div id="hat"></div>
+        </div>
+      </details>
+      <details class="game" id="game-4">
+        <summary><span class="gcode">J5</span><span class="gname">3 en Raya por parejas</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="tres-en-raya.png" alt="3 en raya: tablero con círculos azules ganando en diagonal">
+    <p><b>Objetivo:</b> la pareja que arma primero 3 en raya gana la partida. Los dos integrantes de la pareja se turnan para poner la ficha.</p>
+    <p><b>Formato:</b> 7 parejas sorteadas al azar (ninguna repite pareja de Sequence), sistema suizo de <b>3 rondas + final</b>. Cada enfrentamiento es al mejor de 3 partidas (gana quien llega a 2); los empates se repiten y empieza la pareja que no empezó la partida anterior.</p>
+    <p><b>Ronda 1:</b> cruces sorteados (abajo). <b>Rondas 2 y 3:</b> se enfrentan parejas con el mismo récord (victorias), sin repetir rival. Si no hay con quién, se cruza con la más cercana. <b>Final:</b> juegan las 2 mejores parejas después de la ronda 3 (desempate: resultado entre ellas, o una partida extra).</p>
+    <p><b>Descanso:</b> como son 7 parejas, en cada ronda una descansa (nunca la misma dos veces). En las rondas 2 y 3 descansa la pareja con peor récord que todavía no descansó.</p>
+    <h3>Puntos (cada integrante de la pareja suma lo mismo)</h3>
+    <table class="pts">
+      <tr><th>Concepto</th><th>Puntos</th></tr>
+      <tr><td>Enfrentamiento ganado</td><td>2 (máx. 6)</td></tr>
+      <tr><td>Ronda de descanso</td><td>1</td></tr>
+      <tr><td>Campeona de la final</td><td>+2</td></tr>
+      <tr><td>Finalista</td><td>+1</td></tr>
+    </table>
+    <p class="muted">Total del juego 5 = 2 por victoria + 1 por descanso + bono de final (máximo 8). El descanso vale 1 para que quien no juega no quede en desventaja.</p>
+    <div id="ttt"></div>
+        </div>
+      </details>
+      <details class="game" id="game-5">
+        <summary><span class="gcode">J6</span><span class="gname">Bingo Musical</span><span class="chev">›</span></summary>
+        <div class="gbody">
+    <img class="hero" src="bingo-musical.png" alt="Cartón de Bingo Musical Cachengue Viejo con 16 canciones">
+    <p><b>Objetivo:</b> se reproducen fragmentos de canciones (tema: canciones favoritas de la prima de Caro) y cada persona marca en su cartón de 16 canciones la que escucha. Gana quien completa primero el cartón y grita "¡Bingo!".</p>
+    <p><b>Formato:</b> juegan los <b>14 a la vez</b>, cada persona por su cuenta, en una sola partida. Hay un único ganador. Solo hay empate si dos personas cantan bingo con la misma canción.</p>
+    <p><b>Reglas:</b> se verifica el cartón al cantar bingo. Si el bingo es falso, esa persona queda fuera de las siguientes 3 canciones.</p>
+    <h3>Puntos</h3>
+    <table class="pts">
+      <tr><th>Resultado</th><th>Puntos</th></tr>
+      <tr><td>Ganador/a</td><td>8</td></tr>
+      <tr><td>Empate (cada una de las 2 personas)</td><td>6</td></tr>
+      <tr><td>Casi bingo (les faltaba 1 sola canción cuando se cantó bingo)</td><td>4</td></tr>
+      <tr><td>Resto de los participantes</td><td>2</td></tr>
+    </table>
+    <p class="muted">Todos suman al menos 2 por participar, y quienes quedaron a una canción de ganar suman 4. El máximo es 8, igual que J1. Si hay empate, nadie recibe los 8. Quienes tuvieran un bingo falso no pierden este puntaje.</p>
+        </div>
+      </details>
+      <div class="game soon"><div class="gsum"><span class="gcode">J7</span><span class="gname">Próximamente</span></div></div>
+    </div>
+  </section>
+
+  <section id="tab-ranking">
+    <h2>Ranking</h2>
+    <div id="winner" class="winner hidden"></div>
+    <div id="progress" class="muted" style="margin-bottom:8px"></div>
+    <div id="rankingList"></div>
+  </section>
+
+  <nav class="tabs"><div class="in">
+    <button data-tab="perfil" class="on"><span class="ic">👤</span>Mi perfil</button>
+    <button data-tab="juegos"><span class="ic">🎲</span>Juegos</button>
+    <button data-tab="ranking"><span class="ic">🏆</span>Ranking</button>
+  </div></nav>
+</div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+"use strict";
+const PLAYERS = [
+  "Federico Cogorno", "Juampi Buongiorno", "Rodrigo Weimann", "Eugenio Gil Rodriguez",
+  "Anahí Cueva", "Malena Alamo", "Christian Lombardo", "Federico Giorgi",
+  "Carolina Villa", "Mariana Romero", "Maggie Tobar", "Ignacio Gnarra",
+  "Lara Rosenberg", "Andre Rodriguez"
+];
+const GAME_NAMES = ["Sequence", "Código Secreto", "Sospechosos Inusuales", "That's Not a Hat", "3 en Raya", "Bingo Musical", "Juego 7"];
+const GAMES = GAME_NAMES.length;
+const MAX_POINTS = 20;
+const KEY = "juegos-puntos-v1"; //LS
+const ME_KEY = "juegos-puntos-yo-v1"; //LS
+
+let me = null;           // índice del jugador que entró
+let scores = emptyScores();
+// En Grid usamos el estado compartido del documento.
+const GS = (window.GRID && window.GRID.state) ? window.GRID.state : null;
+
+function emptyScores() { return PLAYERS.map(() => Array(GAMES).fill(null)); }
+const cellKey = (p, g) => "s" + p + "_" + g;
+const validPoints = v => typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= MAX_POINTS;
+function fromObj(obj) {
+  const out = emptyScores();
+  for (let p = 0; p < PLAYERS.length; p++)
+    for (let g = 0; g < GAMES; g++) { const v = obj[cellKey(p, g)]; if (validPoints(v)) out[p][g] = v; }
+  return out;
+}
+// Base de datos compartida (Firebase Realtime Database) para cuando se publica fuera de Grid.
+const FB_URL = "";
+async function loadAll() {
+  if (GS) { const { state } = await GS.get(); scores = fromObj(state || {}); }
+  else if (FB_URL) {
+    const r = await fetch(FB_URL + "/scores.json");
+    if (!r.ok) throw new Error("db");
+    scores = fromObj((await r.json()) || {});
+  } else { try { scores = fromObj(JSON.parse(localStorage.getItem(KEY)) || {}); } catch {} } //LS
+}
+function saveCell(p, g, n) {
+  if (GS) { GS.patch({ [cellKey(p, g)]: n }).then(() => flash("✓ Guardado")).catch(() => notify("No se pudo guardar, reintentá")); return; }
+  if (FB_URL) {
+    fetch(FB_URL + "/scores.json", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ [cellKey(p, g)]: n }) })
+      .then(r => { if (!r.ok) throw new Error("db"); flash("✓ Guardado"); })
+      .catch(() => notify("No se pudo guardar, reintentá"));
+    return;
+  }
+  try { // LS
+    const o = JSON.parse(localStorage.getItem(KEY)) || {}; // LS
+    if (n === null) delete o[cellKey(p, g)]; else o[cellKey(p, g)] = n; // LS
+    localStorage.setItem(KEY, JSON.stringify(o)); flash("✓ Guardado"); // LS
+  } catch {} // LS
+}
+
+// ---------- helpers de UI ----------
+function el(tag, text, cls) {
+  const e = document.createElement(tag);
+  if (text !== undefined) e.textContent = text;   // solo textContent: sin inyección de HTML
+  if (cls) e.className = cls;
+  return e;
+}
+let toastTimer;
+function notify(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.remove("hidden");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 2500);
+}
+function flash(msg) { const s = document.getElementById("saved"); if (s) { s.textContent = msg; setTimeout(() => { s.textContent = ""; }, 1500); } }
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const total = p => scores[p].reduce((a, v) => a + (v ?? 0), 0);
+
+// ---------- login ----------
+function renderNames(q) {
+  const box = document.getElementById("names"); box.replaceChildren();
+  const f = norm(q.trim());
+  PLAYERS.map((n, i) => [n, i]).filter(([n]) => !f || norm(n).includes(f)).forEach(([n, i]) => {
+    const b = el("button", n); b.type = "button"; b.addEventListener("click", () => enter(i)); box.append(b);
+  });
+}
+document.getElementById("search").addEventListener("input", e => renderNames(e.target.value));
+document.getElementById("search").addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const f = norm(e.target.value.trim()); const m = PLAYERS.map((n, i) => i).filter(i => norm(PLAYERS[i]).includes(f));
+  if (m.length === 1) enter(m[0]); else if (!m.length) notify("No encontré ese nombre");
+});
+
+function enter(i) {
+  me = i;
+  try { localStorage.setItem(ME_KEY, String(i)); } catch {} //LS
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("whoName").textContent = PLAYERS[i];
+  renderAll(true);
+}
+document.getElementById("logout").addEventListener("click", () => {
+  me = null;
+  try { localStorage.removeItem(ME_KEY); } catch {} //LS
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("search").value = ""; renderNames("");
+});
+
+// ---------- tabs ----------
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("nav.tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === "tab-" + b.dataset.tab));
+  window.scrollTo(0, 0);
+  if (b.dataset.tab === "ranking") renderRanking();
+}));
+
+// ---------- mi perfil ----------
+function rankOf(p) { const t = total(p); return 1 + PLAYERS.filter((_, q) => total(q) > t).length; }
+
+function renderProfileHeader() {
+  document.getElementById("myTotal").textContent = String(total(me));
+  const done = scores[me].filter(v => v !== null).length;
+  document.getElementById("mySub").textContent = `Vas ${rankOf(me)}.º de ${PLAYERS.length} · ${done} de ${GAMES} juegos cargados`;
+}
+
+function renderProfile() {
+  renderProfileHeader();
+  const box = document.getElementById("myGames"); box.replaceChildren();
+  GAME_NAMES.forEach((name, g) => {
+    const row = el("div", undefined, "row");
+    const txt = el("div", undefined, "gtxt"); txt.append(el("b", `J${g + 1} · ${name}`));
+    if (g === GAMES - 1) txt.append(el("span", "Se habilita cuando se defina el juego"));
+    const inp = document.createElement("input");
+    inp.type = "number"; inp.inputMode = "numeric"; inp.min = 0; inp.max = MAX_POINTS; inp.step = 1; inp.placeholder = "–";
+    inp.setAttribute("aria-label", `Puntos en ${name}`);
+    if (scores[me][g] !== null) inp.value = scores[me][g];
+    const set = n => {
+      if (n !== null && (!Number.isInteger(n) || n < 0 || n > MAX_POINTS)) { notify(`Ingresá un entero entre 0 y ${MAX_POINTS}`); return false; }
+      scores[me][g] = n; inp.value = n === null ? "" : n; saveCell(me, g, n); renderProfileHeader(); return true;
+    };
+    let t; inp.addEventListener("input", () => {
+      clearTimeout(t); t = setTimeout(() => {
+        if (inp.value === "") { set(null); return; }
+        const n = Number(inp.value); if (!set(n)) inp.value = scores[me][g] ?? "";
+      }, 400);
+    });
+    const minus = el("button", "−"), plus = el("button", "+");
+    minus.type = plus.type = "button";
+    minus.addEventListener("click", () => set(Math.max(0, (scores[me][g] ?? 0) - 1)));
+    plus.addEventListener("click", () => set(Math.min(MAX_POINTS, (scores[me][g] ?? 0) + 1)));
+    const st = el("div", undefined, "stepper"); st.append(minus, inp, plus);
+    row.append(txt, st); box.append(row);
+  });
+  const s = el("div", undefined, "saved"); s.id = "saved"; box.append(s);
+}
+
+// ---------- ranking ----------
+function renderRanking() {
+  const list = document.getElementById("rankingList"); list.replaceChildren();
+  const order = PLAYERS.map((_, i) => i).sort((a, b) => total(b) - total(a) || PLAYERS[a].localeCompare(PLAYERS[b]));
+  let rank = 0, prev = null;
+  order.forEach((p, pos) => {
+    const tot = total(p);
+    if (tot !== prev) { rank = pos + 1; prev = tot; }
+    const top = rank <= 3 && tot > 0;
+    const card = el("div", undefined, "rk" + (p === me ? " me" : "") + (top ? " top" : ""));
+    card.append(el("div", top ? ["🥇", "🥈", "🥉"][rank - 1] : String(rank), "pos"));
+    const info = el("div", undefined, "info"); info.append(el("div", PLAYERS[p] + (p === me ? " (vos)" : ""), "nm"));
+    const chips = el("div", undefined, "chips");
+    scores[p].forEach((v, g) => { const c = el("span", undefined, "chip"); c.append(`J${g + 1} `, el("b", v === null ? "·" : String(v))); chips.append(c); });
+    info.append(chips); card.append(info, el("div", String(tot), "tot")); list.append(card);
+  });
+  const complete = Array.from({ length: GAMES }, (_, g) => scores.every(s => s[g] !== null)).filter(Boolean).length;
+  document.getElementById("progress").textContent = `Juegos con todos los puntos cargados: ${complete} de ${GAMES}`;
+  const w = document.getElementById("winner");
+  if (complete === GAMES) {
+    const topScore = Math.max(...PLAYERS.map((_, i) => total(i)));
+    const names = PLAYERS.filter((_, i) => total(i) === topScore);
+    w.textContent = `🎉 ${names.length > 1 ? "Empate entre" : "Ganador/a:"} ${names.join(" y ")} con ${topScore} puntos`;
+    w.classList.remove("hidden");
+  } else w.classList.add("hidden");
+}
+
+function renderAll(withProfile) {
+  if (withProfile) renderProfile(); else renderProfileHeader();
+  renderRanking();
+}
+
+// ---------- contenido de los juegos (sorteos) ----------
+// Sorteo aleatorio de Sequence (generado una vez para que todos vean lo mismo)
+const SEQUENCE_ROUNDS = [
+  [ // Ronda 1
+    ["Tablero A (3 equipos)", [["Carolina Villa","Federico Giorgi"],["Christian Lombardo","Maggie Tobar"],["Lara Rosenberg","Malena Alamo"]]],
+    ["Tablero B", [["Anahí Cueva","Juampi Buongiorno"],["Andre Rodriguez","Ignacio Gnarra"]]],
+    ["Tablero C", [["Eugenio Gil Rodriguez","Mariana Romero"],["Federico Cogorno","Rodrigo Weimann"]]]
+  ],
+  [ // Ronda 2
+    ["Tablero A (3 equipos)", [["Eugenio Gil Rodriguez","Ignacio Gnarra"],["Juampi Buongiorno","Mariana Romero"],["Anahí Cueva","Andre Rodriguez"]]],
+    ["Tablero B", [["Maggie Tobar","Malena Alamo"],["Lara Rosenberg","Rodrigo Weimann"]]],
+    ["Tablero C", [["Federico Cogorno","Federico Giorgi"],["Carolina Villa","Christian Lombardo"]]]
+  ]
+];
+
+function renderRounds() {
+  const wrap = el("div", undefined, "rounds");
+  SEQUENCE_ROUNDS.forEach((round, i) => {
+    const box = el("div", undefined, "round");
+    box.append(el("h4", "Ronda " + (i + 1)));
+    round.forEach(([title, teams]) => {
+      const b = el("div", undefined, "board");
+      b.append(el("b", title), el("span", teams.map(t => t.join(" + ")).join("  vs  ")));
+      box.append(b);
+    });
+    wrap.append(box);
+  });
+  document.getElementById("rounds").append(wrap);
+}
+
+// Sorteo aleatorio de Código Secreto (fijo para las 3 rondas)
+const CODENAMES = [
+  { team: "🔴 Equipo Rojo", color: "#f87171",
+    members: ["Rodrigo Weimann","Federico Giorgi","Lara Rosenberg","Federico Cogorno","Mariana Romero","Juampi Buongiorno","Ignacio Gnarra"],
+    spies: ["Federico Giorgi","Federico Cogorno","Lara Rosenberg"] },
+  { team: "🔵 Equipo Azul", color: "#60a5fa",
+    members: ["Maggie Tobar","Andre Rodriguez","Christian Lombardo","Eugenio Gil Rodriguez","Anahí Cueva","Malena Alamo","Carolina Villa"],
+    spies: ["Carolina Villa","Eugenio Gil Rodriguez","Anahí Cueva"] }
+];
+
+function renderTeams() {
+  const wrap = el("div", undefined, "rounds");
+  CODENAMES.forEach(t => {
+    const box = el("div", undefined, "round");
+    const h = el("h4", t.team); h.style.color = t.color;
+    box.append(h, el("div", t.members.join(", "), "board"));
+    t.spies.forEach((s, i) => box.append(el("div", `Ronda ${i + 1} · jefe de espías: ${s}`, "board")));
+    wrap.append(box);
+  });
+  document.getElementById("teams").append(wrap);
+}
+
+// Sorteo aleatorio de Sospechosos Inusuales (equipos nuevos en cada ronda)
+const SUSPECTS = [
+  [["Christian Lombardo","Juampi Buongiorno","Maggie Tobar","Rodrigo Weimann","Malena Alamo","Lara Rosenberg","Mariana Romero"],
+   ["Ignacio Gnarra","Federico Giorgi","Anahí Cueva","Eugenio Gil Rodriguez","Carolina Villa","Federico Cogorno","Andre Rodriguez"]],
+  [["Carolina Villa","Ignacio Gnarra","Christian Lombardo","Anahí Cueva","Lara Rosenberg","Eugenio Gil Rodriguez","Federico Cogorno"],
+   ["Andre Rodriguez","Malena Alamo","Maggie Tobar","Federico Giorgi","Rodrigo Weimann","Juampi Buongiorno","Mariana Romero"]],
+  [["Anahí Cueva","Mariana Romero","Malena Alamo","Federico Giorgi","Carolina Villa","Ignacio Gnarra","Juampi Buongiorno"],
+   ["Andre Rodriguez","Rodrigo Weimann","Eugenio Gil Rodriguez","Christian Lombardo","Lara Rosenberg","Federico Cogorno","Maggie Tobar"]],
+  [["Andre Rodriguez","Federico Giorgi","Maggie Tobar","Anahí Cueva","Christian Lombardo","Lara Rosenberg","Carolina Villa"],
+   ["Mariana Romero","Eugenio Gil Rodriguez","Rodrigo Weimann","Malena Alamo","Ignacio Gnarra","Federico Cogorno","Juampi Buongiorno"]]
+];
+
+function renderSuspects() {
+  const wrap = el("div", undefined, "rounds");
+  SUSPECTS.forEach((round, i) => {
+    const box = el("div", undefined, "round");
+    box.append(el("h4", "Ronda " + (i + 1)));
+    [["🔴 Rojo", "#f87171"], ["🔵 Azul", "#60a5fa"]].forEach(([label, color], t) => {
+      const b = el("div", undefined, "board");
+      const l = el("b", label); l.style.color = color;
+      b.append(l, el("span", round[t].join(", ")));
+      box.append(b);
+    });
+    wrap.append(box);
+  });
+  document.getElementById("suspects").append(wrap);
+}
+
+// Sorteo aleatorio de That's Not a Hat (2 mesas de 7, fijas durante las 2 rondas)
+const HAT = [
+  ["Andre Rodriguez","Federico Giorgi","Lara Rosenberg","Eugenio Gil Rodriguez","Carolina Villa","Juampi Buongiorno","Anahí Cueva"],
+  ["Maggie Tobar","Mariana Romero","Christian Lombardo","Malena Alamo","Federico Cogorno","Rodrigo Weimann","Ignacio Gnarra"]
+];
+
+function renderHat() {
+  const wrap = el("div", undefined, "rounds");
+  HAT.forEach((table, t) => {
+    const box = el("div", undefined, "round");
+    box.append(el("h4", "Mesa " + (t + 1)), el("div", table.join(", "), "board"));
+    wrap.append(box);
+  });
+  document.getElementById("hat").append(wrap);
+}
+
+// Sorteo aleatorio de 3 en Raya (7 parejas, suizo 3 rondas + final)
+const TTT_PAIRS = [
+  ["Maggie Tobar","Carolina Villa"], ["Ignacio Gnarra","Lara Rosenberg"], ["Federico Giorgi","Eugenio Gil Rodriguez"],
+  ["Christian Lombardo","Malena Alamo"], ["Rodrigo Weimann","Juampi Buongiorno"], ["Mariana Romero","Anahí Cueva"],
+  ["Federico Cogorno","Andre Rodriguez"]
+];
+const pairName = i => TTT_PAIRS[i].join(" + ");
+const TTT_BRACKET = [
+  ["Ronda 1", [`${pairName(0)}  vs  ${pairName(1)}`, `${pairName(2)}  vs  ${pairName(3)}`, `${pairName(4)}  vs  ${pairName(5)}`, `Descansa: ${pairName(6)}`]],
+  ["Rondas 2 y 3", ["Se arman según los resultados (mismo récord, sin repetir rival)"]],
+  ["Final", ["Las 2 mejores parejas tras la ronda 3"]]
+];
+
+function renderTtt() {
+  const wrap = el("div", undefined, "rounds");
+  TTT_BRACKET.forEach(([title, lines]) => {
+    const box = el("div", undefined, "round");
+    box.append(el("h4", title));
+    lines.forEach(l => box.append(el("div", l, "board")));
+    wrap.append(box);
+  });
+  document.getElementById("ttt").append(wrap);
+}
+
+
+renderRounds();
+renderTtt();
+renderTeams();
+renderHat();
+renderSuspects();
+
+// ---------- arranque ----------
+renderNames("");
+loadAll().then(() => {
+  let saved = null; try { saved = localStorage.getItem(ME_KEY); } catch {} //LS
+  if (saved !== null && PLAYERS[Number(saved)]) enter(Number(saved)); //LS
+  if (me !== null) renderAll(true);
+}).catch(() => notify("No se pudieron cargar los puntos"));
+// Se refresca solo para ver los puntos de los demás (sin pisar lo que estás escribiendo)
+if (GS || FB_URL) setInterval(() => {
+  loadAll().then(() => { if (me !== null) renderAll(!document.activeElement || document.activeElement.tagName !== "INPUT"); }).catch(() => {});
+}, 15000);
+</script>
+</body>
+</html>
