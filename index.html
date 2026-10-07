@@ -140,7 +140,7 @@
         <div class="gbody">
     <img class="hero" src="sequence.webp" alt="Sequence: tablero de cartas con fichas azules, rojas y verdes">
     <p><b>Objetivo:</b> formar una secuencia de 5 fichas seguidas (horizontal, vertical o diagonal) sobre el tablero, jugando cartas de la mano.</p>
-    <p><b>Formato:</b> 14 personas, 3 tableros, <b>7 parejas</b> y <b>2 rondas</b>. Tablero A: 3 equipos de 2 (6 personas). Tableros B y C: 2 equipos de 2 (4 personas cada uno). Las parejas y los tableros cambian en la ronda 2, y nadie repite pareja ni juega dos veces en el tablero A.</p>
+    <p><b>Formato:</b> 14 personas, 3 tableros, <b>7 parejas</b> y <b>2 rondas</b>. Tablero A: 3 equipos de 2 (6 personas). Tableros B y C: 2 equipos de 2 (4 personas cada uno). Las parejas y los tableros se arman libremente entre ustedes; en la ronda 2 conviene cambiar de pareja y que nadie repita en el tablero A.</p>
     <p><b>Gana:</b> en el tablero A (3 equipos), la primera pareja que arma <b>1 secuencia</b>; en B y C (2 equipos), la primera que arma <b>2 secuencias</b>. El 2.º y 3.º puesto del tablero A se definen por quién tenga más fichas en su mejor línea (o una mano extra si se juega hasta el final).</p>
     <h3>Puntos por ronda (cada integrante de la pareja suma lo mismo)</h3>
     <table class="pts">
@@ -149,7 +149,12 @@
       <tr><td>B y C (2 equipos)</td><td>3</td><td>1</td><td>—</td></tr>
     </table>
     <p class="muted">Total del juego 1 = ronda 1 + ronda 2 (máximo 8). Desempate: más victorias; si persiste, una mano extra.</p>
-    <div id="rounds"></div>
+    <h3>Jugadores por ronda</h3>
+    <table class="pts">
+      <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
+      <tr><td>Ronda 1</td><td>14 jugadores: tablero A con 6 (3 parejas), tablero B con 4 (2 parejas) y tablero C con 4 (2 parejas)</td></tr>
+      <tr><td>Ronda 2</td><td>Igual: 6 + 4 + 4 jugadores, con parejas y tableros nuevos</td></tr>
+    </table>
         </div>
       </details>
       <details class="game" id="game-1">
@@ -157,14 +162,18 @@
         <div class="gbody">
     <img class="hero" src="thats-not-a-hat.jpg" alt="That's Not a Hat: caja rosa y cartas con objetos dibujados">
     <p><b>Objetivo:</b> es un juego de memoria y engaño. Se pasan cartas boca abajo diciendo qué objeto creen que son; quien recibe decide si le cree o no, y quien se equivoca se lleva la carta. Gana quien evite acumular cartas hasta el final.</p>
-    <p><b>Formato:</b> tenemos 2 copias, así que hay <b>2 mesas de 7</b> jugando a la vez, cada persona por su cuenta. Los grupos se sortearon al azar y <b>se mantienen las 3 rondas</b>: los mismos 7 juegan juntos en cada ronda.</p>
+    <p><b>Formato:</b> tenemos 2 copias, así que hay <b>2 mesas de 7</b> jugando a la vez, cada persona por su cuenta. Los 2 grupos de 7 se arman libremente y <b>se mantienen las 3 rondas</b>: los mismos 7 juegan juntos en cada ronda.</p>
     <h3>Puntos por ronda (según el puesto en tu mesa)</h3>
     <table class="pts">
       <tr><th>Puesto</th><th>1.º</th><th>2.º</th><th>3.º al 7.º</th></tr>
       <tr><td>Puntos</td><td>3</td><td>2</td><td>1</td></tr>
     </table>
     <p class="muted">Total del juego 2 = suma de las 3 rondas (entre 3 y 9). Si dos personas empatan en el puesto, comparten los puntos más altos de esos lugares.</p>
-    <div id="hat"></div>
+    <h3>Jugadores por ronda</h3>
+    <table class="pts">
+      <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
+      <tr><td>Rondas 1, 2 y 3</td><td>14 jugadores: 2 mesas de 7, las mismas las 3 rondas (cada persona juega por su cuenta)</td></tr>
+    </table>
         </div>
       </details>
       <details class="game" id="game-2">
@@ -172,7 +181,7 @@
         <div class="gbody">
     <img class="hero" src="codigo-secreto.png" alt="Código Secreto: tablero de 25 cartas con agentes y palabras">
     <p><b>Objetivo:</b> cada equipo tiene un <b>jefe de espías</b> que da pistas de una sola palabra y un número para que su equipo adivine las palabras de su color. Gana el primer equipo que descubre a todos sus agentes. Si tocan al asesino, pierden al instante.</p>
-    <p><b>Formato:</b> 2 equipos de 7 (Rojo y Azul), sorteados al azar. Los equipos <b>se mantienen las 3 rondas</b>. En cada ronda cambia el jefe de espías (uno distinto por ronda en cada equipo); el resto adivina.</p>
+    <p><b>Formato:</b> 2 equipos de 7 (Rojo y Azul), armados libremente entre ustedes. Los equipos <b>se mantienen las 3 rondas</b>. En cada ronda cambia el jefe de espías (uno distinto por ronda en cada equipo); el resto adivina.</p>
     <h3>Puntos por ronda (todo el equipo de 7 suma lo mismo)</h3>
     <table class="pts">
       <tr><th>Resultado</th><th>Puntos</th></tr>
@@ -180,7 +189,11 @@
       <tr><td>Ronda perdida</td><td>1</td></tr>
     </table>
     <p class="muted">Total del juego 3 = suma de las 3 rondas (entre 3 y 9). Si hay 1-2 o 2-1 en rondas, el equipo con más rondas ganadas es el ganador del juego.</p>
-    <div id="teams"></div>
+    <h3>Jugadores por ronda</h3>
+    <table class="pts">
+      <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
+      <tr><td>Rondas 1, 2 y 3</td><td>14 jugadores: 2 equipos de 7, los mismos las 3 rondas. En cada ronda 1 jefe de espías por equipo (2 en total), distinto cada vez; los otros 12 adivinan</td></tr>
+    </table>
         </div>
       </details>
       <details class="game" id="game-3">
@@ -188,7 +201,7 @@
         <div class="gbody">
     <img class="hero" src="sospechosos-inusuales.png" alt="Sospechosos Inusuales: cartas de sospechosos, tablero numerado y cartas de pregunta">
     <p><b>Objetivo:</b> descubrir cuál de los sospechosos es el culpable haciendo preguntas con las cartas y descartando a los que no coinciden con las respuestas.</p>
-    <p><b>Formato:</b> 2 equipos de 7 y <b>4 rondas</b>. Los equipos se <b>sortean al azar en cada ronda</b>, así todos juegan con y contra gente distinta y nadie queda atado a un solo equipo. Gana la ronda el equipo que identifica primero al culpable.</p>
+    <p><b>Formato:</b> 2 equipos de 7 y <b>4 rondas</b>. Los equipos <b>se arman libremente en cada ronda</b> (idealmente distintos cada vez), así todos juegan con y contra gente distinta y nadie queda atado a un solo equipo. Gana la ronda el equipo que identifica primero al culpable.</p>
     <h3>Puntos por ronda (todo el equipo de 7 suma lo mismo)</h3>
     <table class="pts">
       <tr><th>Resultado</th><th>Puntos</th></tr>
@@ -196,7 +209,11 @@
       <tr><td>Ronda perdida</td><td>1</td></tr>
     </table>
     <p class="muted">Total del juego 4 = suma de las 4 rondas (entre 4 y 8). Como los equipos cambian cada ronda, el total es individual: quien ganó más rondas suma más. Empate: queda así.</p>
-    <div id="suspects"></div>
+    <h3>Jugadores por ronda</h3>
+    <table class="pts">
+      <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
+      <tr><td>Rondas 1 a 4</td><td>14 jugadores en cada ronda: 2 equipos de 7, con equipos nuevos cada ronda</td></tr>
+    </table>
         </div>
       </details>
       <details class="game" id="game-4">
@@ -204,8 +221,8 @@
         <div class="gbody">
     <img class="hero" src="tres-en-raya.png" alt="3 en raya: tablero con círculos azules ganando en diagonal">
     <p><b>Objetivo:</b> la pareja que arma primero 3 en raya gana la partida. Los dos integrantes de la pareja se turnan para poner la ficha.</p>
-    <p><b>Formato:</b> 7 parejas sorteadas al azar (ninguna repite pareja de Sequence), sistema suizo de <b>3 rondas + final</b>. Cada enfrentamiento es al mejor de 3 partidas (gana quien llega a 2); los empates se repiten y empieza la pareja que no empezó la partida anterior.</p>
-    <p><b>Ronda 1:</b> cruces sorteados (abajo). <b>Rondas 2 y 3:</b> se enfrentan parejas con el mismo récord (victorias), sin repetir rival. Si no hay con quién, se cruza con la más cercana. <b>Final:</b> juegan las 2 mejores parejas después de la ronda 3 (desempate: resultado entre ellas, o una partida extra).</p>
+    <p><b>Formato:</b> 7 parejas armadas libremente (idealmente distintas a las de Sequence), sistema suizo de <b>3 rondas + final</b>. Cada enfrentamiento es al mejor de 3 partidas (gana quien llega a 2); los empates se repiten y empieza la pareja que no empezó la partida anterior.</p>
+    <p><b>Ronda 1:</b> cruces al azar. <b>Rondas 2 y 3:</b> se enfrentan parejas con el mismo récord (victorias), sin repetir rival. Si no hay con quién, se cruza con la más cercana. <b>Final:</b> juegan las 2 mejores parejas después de la ronda 3 (desempate: resultado entre ellas, o una partida extra).</p>
     <p><b>Descanso:</b> como son 7 parejas, en cada ronda una descansa (nunca la misma dos veces). En las rondas 2 y 3 descansa la pareja con peor récord que todavía no descansó.</p>
     <h3>Puntos (cada integrante de la pareja suma lo mismo)</h3>
     <table class="pts">
@@ -216,7 +233,13 @@
       <tr><td>Finalista</td><td>+1</td></tr>
     </table>
     <p class="muted">Total del juego 5 = 2 por victoria + 1 por descanso + bono de final (máximo 8). El descanso vale 1 para que quien no juega no quede en desventaja.</p>
-    <div id="ttt"></div>
+    <h3>Jugadores por ronda</h3>
+    <table class="pts">
+      <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
+      <tr><td>Ronda 1</td><td>12 jugadores en 3 enfrentamientos de 2 parejas (4 jugadores cada uno); 2 jugadores (1 pareja) descansan</td></tr>
+      <tr><td>Rondas 2 y 3</td><td>Igual: 12 juegan y 2 descansan (una pareja distinta cada ronda)</td></tr>
+      <tr><td>Final</td><td>4 jugadores: las 2 mejores parejas</td></tr>
+    </table>
         </div>
       </details>
       <details class="game" id="game-5">
@@ -599,131 +622,7 @@ setInterval(() => {
 }, 1000);
 
 // ---------- contenido de los juegos (sorteos) ----------
-// Sorteo aleatorio de Sequence (generado una vez para que todos vean lo mismo)
-const SEQUENCE_ROUNDS = [
-  [ // Ronda 1
-    ["Tablero A (3 equipos)", [["Carolina Villa","Federico Giorgi"],["Christian Lombardo","Maggie Tobar"],["Lara Rosenberg","Malena Alamo"]]],
-    ["Tablero B", [["Anahí Cueva","Juampi Buongiorno"],["Andre Rodriguez","Ignacio Gnarra"]]],
-    ["Tablero C", [["Eugenio Gil Rodriguez","Mariana Romero"],["Federico Cogorno","Rodrigo Weimann"]]]
-  ],
-  [ // Ronda 2
-    ["Tablero A (3 equipos)", [["Eugenio Gil Rodriguez","Ignacio Gnarra"],["Juampi Buongiorno","Mariana Romero"],["Anahí Cueva","Andre Rodriguez"]]],
-    ["Tablero B", [["Maggie Tobar","Malena Alamo"],["Lara Rosenberg","Rodrigo Weimann"]]],
-    ["Tablero C", [["Federico Cogorno","Federico Giorgi"],["Carolina Villa","Christian Lombardo"]]]
-  ]
-];
 
-function renderRounds() {
-  const wrap = el("div", undefined, "rounds");
-  SEQUENCE_ROUNDS.forEach((round, i) => {
-    const box = el("div", undefined, "round");
-    box.append(el("h4", "Ronda " + (i + 1)));
-    round.forEach(([title, teams]) => {
-      const b = el("div", undefined, "board");
-      b.append(el("b", title), el("span", teams.map(t => t.join(" + ")).join("  vs  ")));
-      box.append(b);
-    });
-    wrap.append(box);
-  });
-  document.getElementById("rounds").append(wrap);
-}
-
-// Sorteo aleatorio de Código Secreto (fijo para las 3 rondas)
-const CODENAMES = [
-  { team: "🔴 Equipo Rojo", color: "#f87171",
-    members: ["Rodrigo Weimann","Federico Giorgi","Lara Rosenberg","Federico Cogorno","Mariana Romero","Juampi Buongiorno","Ignacio Gnarra"],
-    spies: ["Federico Giorgi","Federico Cogorno","Lara Rosenberg"] },
-  { team: "🔵 Equipo Azul", color: "#60a5fa",
-    members: ["Maggie Tobar","Andre Rodriguez","Christian Lombardo","Eugenio Gil Rodriguez","Anahí Cueva","Malena Alamo","Carolina Villa"],
-    spies: ["Carolina Villa","Eugenio Gil Rodriguez","Anahí Cueva"] }
-];
-
-function renderTeams() {
-  const wrap = el("div", undefined, "rounds");
-  CODENAMES.forEach(t => {
-    const box = el("div", undefined, "round");
-    const h = el("h4", t.team); h.style.color = t.color;
-    box.append(h, el("div", t.members.join(", "), "board"));
-    t.spies.forEach((s, i) => box.append(el("div", `Ronda ${i + 1} · jefe de espías: ${s}`, "board")));
-    wrap.append(box);
-  });
-  document.getElementById("teams").append(wrap);
-}
-
-// Sorteo aleatorio de Sospechosos Inusuales (equipos nuevos en cada ronda)
-const SUSPECTS = [
-  [["Christian Lombardo","Juampi Buongiorno","Maggie Tobar","Rodrigo Weimann","Malena Alamo","Lara Rosenberg","Mariana Romero"],
-   ["Ignacio Gnarra","Federico Giorgi","Anahí Cueva","Eugenio Gil Rodriguez","Carolina Villa","Federico Cogorno","Andre Rodriguez"]],
-  [["Carolina Villa","Ignacio Gnarra","Christian Lombardo","Anahí Cueva","Lara Rosenberg","Eugenio Gil Rodriguez","Federico Cogorno"],
-   ["Andre Rodriguez","Malena Alamo","Maggie Tobar","Federico Giorgi","Rodrigo Weimann","Juampi Buongiorno","Mariana Romero"]],
-  [["Anahí Cueva","Mariana Romero","Malena Alamo","Federico Giorgi","Carolina Villa","Ignacio Gnarra","Juampi Buongiorno"],
-   ["Andre Rodriguez","Rodrigo Weimann","Eugenio Gil Rodriguez","Christian Lombardo","Lara Rosenberg","Federico Cogorno","Maggie Tobar"]],
-  [["Andre Rodriguez","Federico Giorgi","Maggie Tobar","Anahí Cueva","Christian Lombardo","Lara Rosenberg","Carolina Villa"],
-   ["Mariana Romero","Eugenio Gil Rodriguez","Rodrigo Weimann","Malena Alamo","Ignacio Gnarra","Federico Cogorno","Juampi Buongiorno"]]
-];
-
-function renderSuspects() {
-  const wrap = el("div", undefined, "rounds");
-  SUSPECTS.forEach((round, i) => {
-    const box = el("div", undefined, "round");
-    box.append(el("h4", "Ronda " + (i + 1)));
-    [["🔴 Rojo", "#f87171"], ["🔵 Azul", "#60a5fa"]].forEach(([label, color], t) => {
-      const b = el("div", undefined, "board");
-      const l = el("b", label); l.style.color = color;
-      b.append(l, el("span", round[t].join(", ")));
-      box.append(b);
-    });
-    wrap.append(box);
-  });
-  document.getElementById("suspects").append(wrap);
-}
-
-// Sorteo aleatorio de That's Not a Hat (2 mesas de 7, fijas durante las 2 rondas)
-const HAT = [
-  ["Andre Rodriguez","Federico Giorgi","Lara Rosenberg","Eugenio Gil Rodriguez","Carolina Villa","Juampi Buongiorno","Anahí Cueva"],
-  ["Maggie Tobar","Mariana Romero","Christian Lombardo","Malena Alamo","Federico Cogorno","Rodrigo Weimann","Ignacio Gnarra"]
-];
-
-function renderHat() {
-  const wrap = el("div", undefined, "rounds");
-  HAT.forEach((table, t) => {
-    const box = el("div", undefined, "round");
-    box.append(el("h4", "Mesa " + (t + 1)), el("div", table.join(", "), "board"));
-    wrap.append(box);
-  });
-  document.getElementById("hat").append(wrap);
-}
-
-// Sorteo aleatorio de 3 en Raya (7 parejas, suizo 3 rondas + final)
-const TTT_PAIRS = [
-  ["Maggie Tobar","Carolina Villa"], ["Ignacio Gnarra","Lara Rosenberg"], ["Federico Giorgi","Eugenio Gil Rodriguez"],
-  ["Christian Lombardo","Malena Alamo"], ["Rodrigo Weimann","Juampi Buongiorno"], ["Mariana Romero","Anahí Cueva"],
-  ["Federico Cogorno","Andre Rodriguez"]
-];
-const pairName = i => TTT_PAIRS[i].join(" + ");
-const TTT_BRACKET = [
-  ["Ronda 1", [`${pairName(0)}  vs  ${pairName(1)}`, `${pairName(2)}  vs  ${pairName(3)}`, `${pairName(4)}  vs  ${pairName(5)}`, `Descansa: ${pairName(6)}`]],
-  ["Rondas 2 y 3", ["Se arman según los resultados (mismo récord, sin repetir rival)"]],
-  ["Final", ["Las 2 mejores parejas tras la ronda 3"]]
-];
-
-function renderTtt() {
-  const wrap = el("div", undefined, "rounds");
-  TTT_BRACKET.forEach(([title, lines]) => {
-    const box = el("div", undefined, "round");
-    box.append(el("h4", title));
-    lines.forEach(l => box.append(el("div", l, "board")));
-    wrap.append(box);
-  });
-  document.getElementById("ttt").append(wrap);
-}
-
-
-renderRounds();
-renderTtt();
-renderTeams();
-renderHat();
-renderSuspects();
 
 // ---------- arranque ----------
 renderNames("");
