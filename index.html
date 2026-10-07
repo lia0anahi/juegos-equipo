@@ -197,22 +197,23 @@
         </div>
       </details>
       <details class="game" id="game-3">
-        <summary><span class="gcode">J4</span><span class="gname">Sospechosos Inusuales</span><span class="chev">›</span></summary>
+        <summary><span class="gcode">J4</span><span class="gname">Say My Name</span><span class="chev">›</span></summary>
         <div class="gbody">
-    <img class="hero" src="sospechosos-inusuales.png" alt="Sospechosos Inusuales: cartas de sospechosos, tablero numerado y cartas de pregunta">
-    <p><b>Objetivo:</b> descubrir cuál de los sospechosos es el culpable haciendo preguntas con las cartas y descartando a los que no coinciden con las respuestas.</p>
-    <p><b>Formato:</b> 2 equipos de 7 y <b>4 rondas</b>. Los equipos <b>se arman libremente en cada ronda</b> (idealmente distintos cada vez), así todos juegan con y contra gente distinta y nadie queda atado a un solo equipo. Gana la ronda el equipo que identifica primero al culpable.</p>
-    <h3>Puntos por ronda (todo el equipo de 7 suma lo mismo)</h3>
+    <img class="hero" src="say-my-name.png" alt="Say My Name: caja del juego con ilustraciones de personajes, cine y cultura pop">
+    <p><b>Objetivo:</b> juego de equipos de adivinar nombres: un integrante da pistas sobre el nombre de la carta sin decirlo y su equipo trata de adivinarlo. Gana el equipo que adivine más nombres según las reglas de la caja.</p>
+    <p><b>Formato:</b> juegan los 14 en <b>2 equipos de 7</b>, armados libremente entre ustedes, en <b>una sola partida</b>. Gana el equipo que termina con más puntos al final.</p>
+    <h3>Puntos (todo el equipo de 7 suma lo mismo)</h3>
     <table class="pts">
       <tr><th>Resultado</th><th>Puntos</th></tr>
-      <tr><td>Ronda ganada</td><td>2</td></tr>
-      <tr><td>Ronda perdida</td><td>1</td></tr>
+      <tr><td>Equipo ganador</td><td>6</td></tr>
+      <tr><td>Equipo perdedor</td><td>2</td></tr>
+      <tr><td>Empate (ambos equipos)</td><td>4</td></tr>
     </table>
-    <p class="muted">Total del juego 4 = suma de las 4 rondas (entre 4 y 8). Como los equipos cambian cada ronda, el total es individual: quien ganó más rondas suma más. Empate: queda así.</p>
+    <p class="muted">Total del juego 4 = lo que suma tu equipo (2, 4 o 6). El ganador se lleva 6 y el perdedor igual suma 2 por jugar, parecido a los otros juegos de equipo.</p>
     <h3>Jugadores por ronda</h3>
     <table class="pts">
       <tr><th>Ronda</th><th>Cuántos juegan</th></tr>
-      <tr><td>Rondas 1 a 4</td><td>14 jugadores en cada ronda: 2 equipos de 7, con equipos nuevos cada ronda</td></tr>
+      <tr><td>Partida única</td><td>14 jugadores: 2 equipos de 7</td></tr>
     </table>
         </div>
       </details>
@@ -302,7 +303,7 @@ const PLAYERS = [
   "Carolina Villa", "Mariana Romero", "Maggie Tobar", "Ignacio Gnarra",
   "Lara Rosenberg", "Andre Rodriguez"
 ];
-const GAME_NAMES = ["Sequence", "That's Not a Hat", "Código Secreto", "Sospechosos Inusuales", "3 en Raya", "Bingo Musical", "Guerra de Puntos"];
+const GAME_NAMES = ["Sequence", "That's Not a Hat", "Código Secreto", "Say My Name", "3 en Raya", "Bingo Musical", "Guerra de Puntos"];
 const GAMES = GAME_NAMES.length;
 const MAX_POINTS = 20;
 const KEY = "juegos-puntos-v1"; //LS
